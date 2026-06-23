@@ -1,8 +1,9 @@
 ---
 title: hexo theme ocean
-date: 2022-04-12 16:03:13
+date: 2020-03-31 16:03:13
 tags:
 photos: https://cdn.jsdelivr.net/gh/snorlaxse/jsDeliver/cover/gundam00.jpg
+hide_homepage: true
 ---
 
 

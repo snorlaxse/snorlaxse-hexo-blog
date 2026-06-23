@@ -12,7 +12,9 @@
     <h1 class="page-type-title"><%- title %></h1>
     <% if (pagination == 2){ %>
     <% page.posts.each(function(post){ %>
+    <% if (!post.hide_homepage) { %>
     <%- partial('article', {post: post, index: true}) %>
+    <% } %>
     <% }) %>
   </article>
   <% } else { %>

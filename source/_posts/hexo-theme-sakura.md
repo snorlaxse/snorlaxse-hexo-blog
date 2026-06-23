@@ -1,7 +1,8 @@
 ---
 title: Hexo-Theme-Sakura
-date: 2022-03-30 16:03:10
+date: 2020-03-30 16:03:10
 photos: 
+hide_homepage: true
 ---
 
 ## hexo-Github 

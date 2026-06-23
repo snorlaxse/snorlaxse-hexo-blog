@@ -1,147 +1,133 @@
 ---
 title: Awesome Demo
-photos: ''
+photos: https://cdn.jsdelivr.net/gh/snorlaxse/jsDeliver/cover/gundam02.jpg
 date: 2020-05-15 17:48:52
 ---
 
-
-### Application
-
-#### [handtrack.js](https://github.com/victordibia/handtrack.js/)  
-![GitHub stars](https://img.shields.io/github/stars/victordibia/handtrack.js?style=social)
-
-* **demo**: https://victordibia.github.io/handtrack.js/#/ 
+整理一些有趣、好玩、适合学习的开源 Demo。这里大多是机器学习、计算机视觉、交互式可视化和前端创意项目，方便以后翻出来复习和折腾。
 
 <!-- more -->
 
-### [Google mediapipe](https://github.com/google/mediapipe)
+## CV
 
-* **demo**: https://viz.mediapipe.dev/runner/demos/hand_tracking/hand_tracking.html
+### Google MediaPipe
 
-#### [FlappyLearning](https://github.com/xviniette/FlappyLearning)
+[GitHub](https://github.com/google/mediapipe) · [Demo](https://viz.mediapipe.dev/runner/demos/hand_tracking/hand_tracking.html)
 
-![GitHub stars](https://img.shields.io/github/stars/xviniette/FlappyLearning?style=social)
+![mediapipe](https://camo.githubusercontent.com/d8cedc8fb35da38d029cf1cb3a27b869540e52adf252a28cdbb13bb52f32f4f7/68747470733a2f2f646576656c6f706572732e676f6f676c652e636f6d2f7374617469632f6d65646961706970652f696d616765732f686f6d652f6865726f5f30315f313932302e706e67)
 
-![](https://i.pcmag.com/imagery/articles/01EkIOfisgxkfodZ4JmTIXa-1.fit_scale.size_2698x1517.v1569489280.jpg)
+Google 出品的多媒体机器学习框架，包含手势、姿态、人脸等实时感知能力。
 
-FlappyLearning 是一个仅用 800 行代码创建的 JavaScript 机器学习库，它让你可以像行家一样玩转 `Flappy Bird` 游戏。在这个库中所使用的 AI 技术被称为 `“Neuroevolution”`，而它所应用算法的灵感则源于自然界生物神经系统的进化，并且它可以从每次成功或失败的迭代中进行动态的学习。另外，你只需要在浏览器中打开 index.html 就可以运行它了，炒鸡简单。
+----
 
-#### [Google Dinosaur](https://github.com/ivanseidel/IAMDinosaur)
+### openface
 
-![GitHub stars](https://img.shields.io/github/stars/ivanseidel/IAMDinosaur?style=social)
-
-![](https://raw.githubusercontent.com/ivanseidel/IAMDinosaur/master/assets/top_score.png)
-
-Watch this video to see it in action, and learn how it works: [Artificial Intelligence with Google's Dinosaur](https://www.youtube.com/watch?v=P7XHzqZjXQs&feature=youtu.be)
-
-#### [neural-style](https://github.com/jcjohnson/neural-style)
-
-![GitHub stars](https://img.shields.io/github/stars/jcjohnson/neural-style?style=social)
-
-![](https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/starry_stanford_bigger.png)
-
-#### [neural-doodle](https://github.com/alexjc/neural-doodle)
-
-![GitHub stars](https://img.shields.io/github/stars/alexjc/neural-doodle?style=social)
-
-![](https://github.com/alexjc/neural-doodle/raw/master/docs/Landscape_example.png)
-
-#### [openface](https://github.com/cmusatyalab/openface)
-
-![GitHub stars](https://img.shields.io/github/stars/cmusatyalab/openface?style=social)
+[GitHub](https://github.com/cmusatyalab/openface) · [Demo](http://cmusatyalab.github.io/openface/demo-4-sphere/) · <img class="inline-badge" src="https://img.shields.io/github/stars/cmusatyalab/openface?style=social" alt="GitHub stars">
 
 ![Real-Time Face Embedding Visualization](https://raw.githubusercontent.com/cmusatyalab/openface/master/images/sphere-demo/demo.gif)
 
-* **demo**: http://cmusatyalab.github.io/openface/demo-4-sphere/
+实时人脸嵌入可视化项目，可以直观看到人脸特征在空间中的分布。
 
-#### [OpenAI Gym](https://github.com/openai/gym)
+----
 
-![GitHub stars](https://img.shields.io/github/stars/openai/gym?style=social)
+### handtrack.js
 
-![](https://newscrewdriver.files.wordpress.com/2019/06/openai-gym.jpg?w=772)
+[GitHub](https://github.com/victordibia/handtrack.js/) · [Demo](https://victordibia.github.io/handtrack.js/#/) · <img class="inline-badge" src="https://img.shields.io/github/stars/victordibia/handtrack.js?style=social" alt="GitHub stars">
 
-* **demo**: https://gym.openai.com/
+![handtrack.js](https://github.com/victordibia/handtrack.js/raw/master/demo/images/screen.jpg)
 
-#### [neuraltalk2](https://github.com/karpathy/neuraltalk2)
+浏览器端手部检测项目，可以直接在网页里体验实时 hand tracking。
 
-![GitHub stars](https://img.shields.io/github/stars/karpathy/neuraltalk2?style=social)
+----
 
-![](https://camo.githubusercontent.com/684a313b08ebab8d1d0aec023e84ba59d57e8cdc/68747470733a2f2f7261772e6769746875622e636f6d2f6b617270617468792f6e657572616c74616c6b322f6d61737465722f7669732f7465617365722e6a706567)
+### Realtime Multi-Person 2D Pose Estimation
 
-* **demo**: https://cs.stanford.edu/people/karpathy/neuraltalk2/demo.html
+[Paper](https://arxiv.org/abs/1611.08050) · [Video Demo](https://www.youtube.com/watch?v=pW6nZXeWlGM&feature=youtu.be)
 
-#### [DeepQA](https://github.com/Conchylicultor/DeepQA)
+![Realtime multi-person pose estimation](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLaQ-uOQ57S1HTXnVKJZ1oB1HDDixZrmuJKP5rXcwO4AWrth4wbGGLnes&s=10)
 
-![GitHub stars](https://img.shields.io/github/stars/Conchylicultor/DeepQA?style=social)
+多人 2D 姿态估计方向的经典工作，Part Affinity Fields 很值得读。
 
-![](http://e-pot.xyz/cv/chatbot.png)
+----
 
-#### [Realtime Multi-Person 2D Pose Estimation Using Part Affinity Fields](https://arxiv.org/abs/1611.08050)
+## RL
+### FlappyLearning
 
-![](https://img-blog.csdn.net/20180719204725712?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RhbmdiaW4yMDA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+[GitHub](https://github.com/xviniette/FlappyLearning) · <img class="inline-badge" src="https://img.shields.io/github/stars/xviniette/FlappyLearning?style=social" alt="GitHub stars">
 
-* video demo: https://www.youtube.com/watch?v=pW6nZXeWlGM&feature=youtu.be
+![Flappy Bird AI demo](https://i.pcmag.com/imagery/articles/01EkIOfisgxkfodZ4JmTIXa-1.fit_scale.size_2698x1517.v1569489280.jpg)
 
-### ML
+FlappyLearning 是一个仅用 800 行代码创建的 JavaScript 机器学习库，它让你可以像行家一样玩转 `Flappy Bird` 游戏。它使用的 AI 技术被称为 `Neuroevolution`，灵感源于自然界生物神经系统的进化，可以从每次成功或失败的迭代中动态学习。只需要在浏览器中打开 `index.html` 就可以运行，简单又直观。
 
-#### [Deep playground](https://github.com/tensorflow/playground)
+----
 
-![GitHub stars](https://img.shields.io/github/stars/tensorflow/playground?style=social)
+### OpenAI Gym
 
-![](https://upload-images.jianshu.io/upload_images/675733-9ee8493d72c1434e.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/785/format/webp)
+[GitHub](https://github.com/openai/gym) · [Demo](https://gym.openai.com/) · <img class="inline-badge" src="https://img.shields.io/github/stars/openai/gym?style=social" alt="GitHub stars">
 
-这是由 TensorFlow 出品的可视化的神经网络交互式学习程序。它可以带你了解神经网络，并探索其不同的组件。它不仅有一个漂亮的用户界面，而且通过控制数据、神经元数量、使用算法的类别以及各项其他的指标，让你能够直观、实时的了解其运行的状态。另外，由于它是开源的（它用 TypeScript 编写，并具备优质的文档可查阅），所以通过了解其项目背景，你还能够学到更多有价值的知识。
+![OpenAI Gym](https://newscrewdriver.files.wordpress.com/2019/06/openai-gym.jpg?w=772)
 
-#### [TensorFlow-Examples](https://github.com/aymericdamien/TensorFlow-Examples)
+强化学习实验环境集合，适合做算法验证和入门练习。
 
-![GitHub stars](https://img.shields.io/github/stars/aymericdamien/TensorFlow-Examples?style=social)
+----
 
+### Google Dinosaur
 
-#### [conv_arithmetic](https://github.com/vdumoulin/conv_arithmetic)
+[GitHub](https://github.com/ivanseidel/IAMDinosaur) · [Video](https://www.youtube.com/watch?v=P7XHzqZjXQs&feature=youtu.be) · <img class="inline-badge" src="https://img.shields.io/github/stars/ivanseidel/IAMDinosaur?style=social" alt="GitHub stars">
 
-![GitHub stars](https://img.shields.io/github/stars/vdumoulin/conv_arithmetic?style=social)
+![Google Dinosaur top score](https://raw.githubusercontent.com/ivanseidel/IAMDinosaur/master/assets/top_score.png)
 
-![Padding, strides (odd)](https://github.com/vdumoulin/conv_arithmetic/raw/master/gif/padding_strides_odd.gif)
+让 AI 玩 Chrome 小恐龙游戏。视频里能看到它的运行效果和基本原理。
 
+----
 
-#### [convnetjs](https://github.com/karpathy/convnetjs)
+## Transfer Learning
+### neural-style
 
-![GitHub stars](https://img.shields.io/github/stars/karpathy/convnetjs?style=social)
+[GitHub](https://github.com/jcjohnson/neural-style) · <img class="inline-badge" src="https://img.shields.io/github/stars/jcjohnson/neural-style?style=social" alt="GitHub stars">
 
-#### [Synaptic](https://github.com/cazala/synaptic)
+![Neural style transfer example](https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/starry_stanford_bigger.png)
 
-![GitHub stars](https://img.shields.io/github/stars/cazala/synaptic?style=social)
+经典的神经风格迁移项目，可以把图像转换成类似艺术作品的视觉风格。
 
-Synaptic 是一个 `Node.js` 和浏览器可用的库。虽然它的架构未知，但开发人员可以通过它来构建任何类型的神经网络。它也具备一些内置架构，使它能够快速的测试，并能针对不同的机器学习算法进行比较。同时，它的使用文档丰富且全面，包含了神经网络的基本介绍、一些实用的演示，以及相应的使用教程。
+----
 
+### neural-doodle
 
-### JS
+[GitHub](https://github.com/alexjc/neural-doodle) · <img class="inline-badge" src="https://img.shields.io/github/stars/alexjc/neural-doodle?style=social" alt="GitHub stars">
 
-#### [impress.js](https://github.com/impress/impress.js)
+![Neural doodle landscape example](https://github.com/alexjc/neural-doodle/raw/master/docs/Landscape_example.png)
 
-![GitHub stars](https://img.shields.io/github/stars/impress/impress.js?style=social)
-受 https://prezi.com/ 的启发，使用了现代浏览器里支持的 `CSS3 transforms` 和 `transitions` 的特效幻灯片  
+基于涂鸦和语义提示生成风格化图像的项目，适合了解图像生成和风格迁移的结合玩法。
 
-![](https://img.ctolib.com/uploadImg/20181013/20181013161858_854.jpg)
+----
 
-* `github`: https://github.com/impress/impress.js
-* **demo**: https://impress.js.org/
+### neuraltalk2
 
-#### [carbon](https://github.com/carbon-app/carbon): 代码美图生成器
+[GitHub](https://github.com/karpathy/neuraltalk2) · [Demo](https://cs.stanford.edu/people/karpathy/neuraltalk2/demo.html) · <img class="inline-badge" src="https://img.shields.io/github/stars/karpathy/neuraltalk2?style=social" alt="GitHub stars">
 
-![GitHub stars](https://img.shields.io/github/stars/carbon-app/carbon?style=social)
+![neuraltalk2 teaser](https://camo.githubusercontent.com/38ce98bddc28d192c5528afdd68df28179ebd2cadc1658e6310bac4a2b7daa25/68747470733a2f2f7261772e6769746875622e636f6d2f6b617270617468792f6e657572616c74616c6b322f6d61737465722f7669732f7465617365722e6a706567)
 
-可以将你的代码生成酷酷的图片，然后你就可以分享到各个社区 或者 实验报告 😢 
-
-![](https://img.ctolib.com/uploadImg/20181013/20181013161859_876.jpg)
-
-* `github`: https://github.com/dawnlabs/carbon
-* **demo**: https://dawnlabs.io/carbon
+经典的图像描述生成项目，由 Karpathy 开源。
 
 
-### 参考链接
+----
+## JS
 
-* [10 个基于 JavaScript 的机器学习实例](https://www.jianshu.com/p/82fa121cf359)
-* [GitHub 上 57 款最流行的开源深度学习项目](https://www.oschina.net/news/79500/57-most-popular-deep-learning-project-at-github)
-* [机器学习领域有哪些适合新手学习的 GitHub 项目？](https://www.zhihu.com/question/27098881)
-* [获取github项目star的数量](https://blog.csdn.net/weixin_41187842/article/details/96464926)
+### impress.js
+
+[GitHub](https://github.com/impress/impress.js) · [Demo](https://impress.js.org/) · <img class="inline-badge" src="https://img.shields.io/github/stars/impress/impress.js?style=social" alt="GitHub stars">
+
+![impress.js presentation](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy6qgNPPz1e9xgREh88Kf8Sgf93BfPFXc4qUY5prwDcDxMF3zyXTgXGS13&s=10)
+
+受 [Prezi](https://prezi.com/) 启发，使用现代浏览器支持的 `CSS3 transforms` 和 `transitions` 实现特效幻灯片。
+
+----
+
+### carbon
+
+[GitHub](https://github.com/carbon-app/carbon) · [Demo](https://dawnlabs.io/carbon) · <img class="inline-badge" src="https://img.shields.io/github/stars/carbon-app/carbon?style=social" alt="GitHub stars">
+
+![Carbon code image generator](https://user-images.githubusercontent.com/8397708/63456416-b27d1a80-c403-11e9-9572-105b089be885.png)
+
+代码美图生成器，可以把代码片段生成漂亮的图片，适合分享到社区，也适合放到实验报告或演示文稿里。
