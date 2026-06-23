@@ -1,0 +1,118 @@
+# site name
+prefixName: カビゴン
+siteName: SnorlaxSE
+# favicon and site master avatar
+favicon: /images/favicon.ico
+avatar: /theme/custom/avatar.jpg
+# url: https://snorlaxse.github.io/
+url: https://snorlax.top/
+description: Stay Hungry, Stay Foolish
+cdn: http://qiniu.snorlax.top
+pjax: 1 # 1开启
+
+# notice: 初立凡尘之外，看尽人世嬉笑. 今渡万般琐事，亦不过平平尔.
+notice: 除了成为更好的自己，你不应该渴望成为任何人.
+lazyloadImg: http://qiniu.snorlax.top/theme/loader/orange.progress-bar-stripe-loader.svg
+
+menus:
+  首页: { path: /, fa: fa-fort-awesome faa-shake }
+  归档: { path: /archives, fa: fa-archive faa-shake, submenus: { 
+    算法: {path: /categories/算法/, fa: fa-tv },  # http://www.fontawesome.com.cn/icons-ui/
+    论文: {path: /categories/论文/, fa: fa-bookmark-o },
+    技术: {path: /categories/技术/, fa: fa-code }, 
+    教程: {path: /categories/教程/, fa: fa-lemon-o },
+    笔记: {path: /categories/笔记/, fa: fa-comment-o }
+  } }
+  清单: { path: javascript:;, fa: fa-list-ul faa-vertical, submenus: { 
+    语录: {path: /categories/语录/, fa: fa-mixcloud }, 
+    书签: {path: /categories/书签/, fa: fa-th-list faa-bounce }, 
+    番组: {path: /bangumi/, fa: fa-film faa-vertical }, 
+    歌单: {path: /music/, fa: fa-headphones },
+    # 图集: {path: /galleries, fa: fa-photo }
+  } }
+  留言板: { path: /comment/, fa: fa-pencil-square-o faa-tada }
+  友人帐: { path: /links/, fa: fa-link faa-shake }
+  赞赏: { path: /donate/, fa: fa-heart faa-pulse }
+  关于: { path: /, fa: fa-leaf faa-wrench , submenus: { 
+    我？: {path: /about/, fa: fa-meetup}, 
+    主题: {path: /theme-sakura/, fa: iconfont icon-sakura },
+    Lab: {path: /lab/, fa: fa-cogs },
+  } }
+  客户端: { path: /client/, fa: fa-android faa-vertical }
+  RSS: { path: /atom.xml, fa: fa-rss faa-pulse }
+
+
+# Home page sort type: -1: newer first，1: older first.
+homePageSortType: -1
+# Home page article shown number)
+homeArticleShown: 10
+# 背景图片 更好的修改
+bg:
+  - http://qiniu.snorlax.top/theme/cover/1.jpg
+  # - http://qiniu.snorlax.top/theme/cover/2.jpg
+  # - http://qiniu.snorlax.top/theme/cover/3.jpg
+  # - https://i.loli.net/2020/05/01/IuWi8QbHvzjlOPw.jpg
+
+# 背景图片样式 空 原图效果 filter-dim 阴影 filter-grid 横条 filter-dot 点点
+# bgclass: filter-dim
+# bgclass: filter-grid
+# bgclass: filter-dot
+bgclass: 
+
+# startdash url, title, desc img
+startdash: 
+  - {url: /2020/06/25/Neural-Network-knowledge/, title: Neural Network knowledge, desc: 笔记 , img: /theme/startdash/wangshiwu.jpg}
+  - {url: /2020/05/15/Followers/, title: Followers, desc: Blog 书签, img: /theme/startdash/bilibili.jpg}
+  - {url: /2020/05/15/Awesome-Demo/, title: Demo, desc: 有趣的演示, img: /theme/anime/7.jpg}
+
+
+# your site build time or founded date
+siteBuildingTime: 05/23/2019
+
+#social  url, img PC端配置
+social:
+  github: {url: http://github.com/SnorlaxSE, img: /theme/social/github.png}
+  email: {url: http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=3eXp7Ozp6Ovu652srPO_srA, img: /theme/social/email.svg}
+  wechat: {url: /#, qrcode: /theme/custom/wechat.jpg, img: /theme/social/wechat.png}
+
+#social  url, img 移动端配置 mobile
+msocial:
+  github: {url: http://github.com/SnorlaxSE, fa: fa-github, color: 333}
+  weibo: {url: https://weibo.com/5725411710/profile?topnav=1&wvr=6&is_all=1, fa: fa-weibo, color: dd4b39}
+  qq: {url: https://wpa.qq.com/msgrd?v=3&uin=841145636&site=qq&menu=yes, fa: fa-qq, color: 25c6fe}
+
+donate:
+  paypal: https://www.paypal.me/snorlaxse
+  alipay: /theme/custom/donate/AliPayQR.jpg
+  wechat: /theme/custom/donate/WeChanQR.jpg
+  wechatSQ: /theme/custom/donate/WeChanSQ.jpg
+
+# 视频地址为https://cdn.jsdelivr.net/gh/honjun/hojun@1.2/Unbroken.mp4，配置如下
+movies:
+  url: http://qiniu.snorlax.top/video
+  # 多个视频用逗号隔开，随机获取。支持的格式目前已知MP4,Flv。其他的可以试下，不保证有用
+  name: Unbroken.mp4
+
+aplayer: 
+  id: 2895534730
+  server: netease
+  type: playlist
+  fixed: true
+  autoplay: false
+  loop: all
+  order: random
+  preload: auto
+  volume: 0.7
+  mutex: true
+
+# Valine
+valine: true
+v_appId: DfaiFARwjtYUsdzLvHCfQX2y-gzGzoHsz
+v_appKey: gdyMHnd6KbdXcdMYsfopidnJ
+
+# 不蒜子
+busuanzi:
+    enable: true
+
+# 数学公式渲染
+mathjax: 1  # 1 开启
