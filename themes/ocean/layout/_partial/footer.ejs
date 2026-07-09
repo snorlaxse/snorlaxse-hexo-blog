@@ -5,7 +5,7 @@
     </div>
     <ul class="list-inline">
       <li><%= config.title %> &copy; <%= date(new Date(), 'YYYY') %></li>
-      <% if (theme.beian){ %>
+      <% if (theme.beian && theme.beian.enable && theme.beian.number){ %>
         <li><a href="https://beian.miit.gov.cn/" target="_blank"><%- theme.beian.number %></a></li>
       <% } %>
       <li><%= __('powered_by') %> <a href="http://hexo.io/" target="_blank">Hexo</a></li>
