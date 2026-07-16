@@ -21,6 +21,7 @@ const resetButton = document.querySelector('#resetButton');
 const wireframeInput = document.querySelector('#wireframeInput');
 const autoRotateInput = document.querySelector('#autoRotateInput');
 const spinAxisInput = document.querySelector('#spinAxisInput');
+const animationInput = document.querySelector('#animationInput');
 const lightInput = document.querySelector('#lightInput');
 const dropzone = document.querySelector('#dropzone');
 const fileInput = document.querySelector('#fileInput');
@@ -34,6 +35,12 @@ let models = [];
 let activeUrl = '';
 let currentObject = null;
 let currentMixer = null;
+let currentAnimationClips = [];
+let currentAnimationIndex = -1;
+let currentModelRoot = null;
+let currentGroundOffset = null;
+let currentDefaultPosePoint = null;
+let currentDefaultGroundOffset = null;
 let currentFrame = null;
 let lastFrameTime = 0;
 let handLandmarker = null;
@@ -137,7 +144,14 @@ function disposeObject(object) {
 
 function clearModel() {
   currentMixer = null;
+  currentAnimationClips = [];
+  currentAnimationIndex = -1;
+  currentModelRoot = null;
+  currentGroundOffset = null;
+  currentDefaultPosePoint = null;
+  currentDefaultGroundOffset = null;
   currentFrame = null;
+  renderAnimationOptions();
   if (!currentObject) return;
   scene.remove(currentObject);
   disposeObject(currentObject);
@@ -155,6 +169,34 @@ function prepareObject(object) {
         material.wireframe = wireframeInput.checked;
       });
     }
+  });
+}
+
+function normalizeFbxMaterial(material) {
+  if (!material) return;
+
+  if (material.map) {
+    material.map.colorSpace = THREE.SRGBColorSpace;
+  }
+
+  if (material.color) material.color.set(0xffffff);
+  if ('vertexColors' in material) material.vertexColors = false;
+  if ('normalMap' in material) material.normalMap = null;
+  if ('bumpMap' in material) material.bumpMap = null;
+  if ('roughness' in material) material.roughness = 1;
+  if ('metalness' in material) material.metalness = 0;
+  if ('shininess' in material) material.shininess = 0;
+  if (material.specular) material.specular.set(0x000000);
+  if (material.emissive) material.emissive.set(0x000000);
+
+  material.needsUpdate = true;
+}
+
+function normalizeFbxMaterials(object) {
+  object.traverse((child) => {
+    if (!child.isMesh) return;
+    const materials = Array.isArray(child.material) ? child.material : [child.material];
+    materials.filter(Boolean).forEach(normalizeFbxMaterial);
   });
 }
 
@@ -176,11 +218,9 @@ function frameObject(object) {
   const scale = 2.4 / maxDim;
 
   object.scale.multiplyScalar(scale);
-
-  const scaledBox = new THREE.Box3().setFromObject(object);
-  const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
-  object.position.sub(scaledCenter);
-  object.position.y -= scaledBox.min.y;
+  object.updateMatrixWorld(true);
+  updateGroundedPivotForCurrentPose();
+  saveDefaultAnimationPoseReference();
 
   const finalBox = new THREE.Box3().setFromObject(object);
   const finalSize = finalBox.getSize(new THREE.Vector3());
@@ -189,6 +229,27 @@ function frameObject(object) {
 
   currentFrame = { center: finalCenter.clone(), radius };
   resetCamera();
+}
+
+function updateFrameFromObject(object, preserveView = false) {
+  const box = new THREE.Box3().setFromObject(object);
+  if (box.isEmpty()) return;
+
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const radius = Math.max(size.x, size.y, size.z) * 0.75 || 1;
+
+  if (preserveView) {
+    const targetDelta = center.clone().sub(controls.target);
+    camera.position.add(targetDelta);
+    controls.target.copy(center);
+  }
+
+  currentFrame = { center: center.clone(), radius };
+  camera.near = Math.max(radius / 100, 0.01);
+  camera.far = Math.max(radius * 100, 100);
+  camera.updateProjectionMatrix();
+  controls.update();
 }
 
 function resetCamera() {
@@ -218,18 +279,113 @@ function zoomCamera(factor) {
   controls.update();
 }
 
-function createCenteredPivot(object) {
-  object.updateMatrixWorld(true);
-  const box = new THREE.Box3().setFromObject(object);
-  if (box.isEmpty()) return object;
+function createGroundedPivot(object) {
+  const pivot = new THREE.Group();
+  const offset = new THREE.Group();
+
+  pivot.name = 'model-ground-pivot';
+  offset.name = 'model-ground-offset';
+  offset.add(object);
+  pivot.add(offset);
+  currentModelRoot = object;
+  currentGroundOffset = offset;
+  updateGroundedPivotForCurrentPose();
+  saveDefaultAnimationPoseReference();
+  return pivot;
+}
+
+function getBoxRelativeTo(object, reference) {
+  const inverseReferenceMatrix = new THREE.Matrix4().copy(reference.matrixWorld).invert();
+  const box = new THREE.Box3();
+  const childBox = new THREE.Box3();
+  const relativeMatrix = new THREE.Matrix4();
+  const vertex = new THREE.Vector3();
+
+  object.traverse((child) => {
+    if (!child.isMesh || !child.geometry) return;
+
+    const position = child.geometry.attributes.position;
+    const applyBoneTransform = child.boneTransform || child.applyBoneTransform;
+    if (child.isSkinnedMesh && position && applyBoneTransform) {
+      if (child.skeleton) child.skeleton.update();
+      childBox.makeEmpty();
+      for (let index = 0; index < position.count; index += 1) {
+        vertex.fromBufferAttribute(position, index);
+        applyBoneTransform.call(child, index, vertex);
+        vertex.applyMatrix4(child.matrixWorld).applyMatrix4(inverseReferenceMatrix);
+        childBox.expandByPoint(vertex);
+      }
+      box.union(childBox);
+      return;
+    }
+
+    if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
+    if (!child.geometry.boundingBox) return;
+
+    relativeMatrix.multiplyMatrices(inverseReferenceMatrix, child.matrixWorld);
+    childBox.copy(child.geometry.boundingBox).applyMatrix4(relativeMatrix);
+    box.union(childBox);
+  });
+
+  return box;
+}
+
+function getCurrentPosePoint(reference) {
+  const box = getBoxRelativeTo(currentModelRoot, reference);
+  if (box.isEmpty()) return null;
 
   const center = box.getCenter(new THREE.Vector3());
-  const pivot = new THREE.Group();
-  pivot.name = 'model-center-pivot';
-  pivot.position.copy(center);
-  object.position.sub(center);
-  pivot.add(object);
-  return pivot;
+
+  return {
+    x: center.x,
+    y: box.min.y,
+    z: center.z
+  };
+}
+
+function saveDefaultAnimationPoseReference() {
+  const pivot = currentObject || currentGroundOffset?.parent;
+  if (!currentModelRoot || !currentGroundOffset || !pivot) return;
+
+  pivot.updateMatrixWorld(true);
+  currentDefaultPosePoint = getCurrentPosePoint(pivot);
+  currentDefaultGroundOffset = currentGroundOffset.position.clone();
+}
+
+function alignCurrentPoseToDefaultAnimationPosition() {
+  const pivot = currentObject || currentGroundOffset?.parent;
+  if (!currentModelRoot || !currentGroundOffset || !currentDefaultPosePoint || !currentDefaultGroundOffset || !pivot) {
+    updateGroundedPivotForCurrentPose();
+    return;
+  }
+
+  currentGroundOffset.position.copy(currentDefaultGroundOffset);
+  pivot.updateMatrixWorld(true);
+
+  const currentPoint = getCurrentPosePoint(pivot);
+  if (!currentPoint) return;
+
+  currentGroundOffset.position.set(
+    currentDefaultGroundOffset.x + currentDefaultPosePoint.x - currentPoint.x,
+    currentDefaultGroundOffset.y + currentDefaultPosePoint.y - currentPoint.y,
+    currentDefaultGroundOffset.z + currentDefaultPosePoint.z - currentPoint.z
+  );
+  pivot.updateMatrixWorld(true);
+}
+
+function updateGroundedPivotForCurrentPose() {
+  if (!currentModelRoot || !currentGroundOffset) return;
+  const pivot = currentObject || currentGroundOffset.parent;
+  if (!pivot) return;
+
+  currentGroundOffset.position.set(0, 0, 0);
+  pivot.updateMatrixWorld(true);
+  const box = getBoxRelativeTo(currentModelRoot, pivot);
+  if (box.isEmpty()) return;
+
+  const center = box.getCenter(new THREE.Vector3());
+  currentGroundOffset.position.set(-center.x, -box.min.y, -center.z);
+  pivot.updateMatrixWorld(true);
 }
 
 function setWireframe(enabled) {
@@ -289,6 +445,7 @@ async function parseLocalFile(file) {
     if (extension === 'fbx') {
       const object = await loadWith(new FBXLoader(), objectUrl);
       startAnimations(object, object.animations);
+      normalizeFbxMaterials(object);
       return object;
     }
     if (extension === 'obj') return loadWith(new OBJLoader(), objectUrl);
@@ -307,11 +464,69 @@ async function parseLocalFile(file) {
   }
 }
 
+function formatAnimationName(clip, index) {
+  const rawName = clip.name || `Animation ${index + 1}`;
+  const nameParts = rawName.split('\u0000')[0].split('|').filter(Boolean);
+  let baseName = nameParts.pop() || rawName;
+  if (baseName.toLowerCase() === 'base layer' && nameParts.length) {
+    baseName = nameParts.pop();
+  }
+  const duration = Number.isFinite(clip.duration) ? `${clip.duration.toFixed(2)}s` : 'unknown';
+  return `${baseName} (${duration})`;
+}
+
+function getDefaultAnimationIndex(animations) {
+  return animations.reduce((bestIndex, clip, index) => (
+    clip.duration > animations[bestIndex].duration ? index : bestIndex
+  ), 0);
+}
+
+function renderAnimationOptions() {
+  animationInput.replaceChildren();
+
+  if (!currentAnimationClips.length) {
+    const option = document.createElement('option');
+    option.value = '';
+    option.textContent = 'None';
+    animationInput.append(option);
+    animationInput.disabled = true;
+    return;
+  }
+
+  currentAnimationClips.forEach((clip, index) => {
+    const option = document.createElement('option');
+    option.value = String(index);
+    option.textContent = formatAnimationName(clip, index);
+    animationInput.append(option);
+  });
+
+  animationInput.disabled = false;
+  animationInput.value = String(currentAnimationIndex);
+}
+
+function playAnimation(index) {
+  const clip = currentAnimationClips[index];
+  if (!currentMixer || !clip) return;
+
+  currentMixer.stopAllAction();
+  currentMixer.clipAction(clip).reset().setLoop(THREE.LoopRepeat, Infinity).play();
+  currentMixer.setTime(0);
+  currentAnimationIndex = index;
+  animationInput.value = String(index);
+  alignCurrentPoseToDefaultAnimationPosition();
+  if (currentObject) updateFrameFromObject(currentObject);
+}
+
 function startAnimations(root, animations = []) {
   currentMixer = null;
+  currentAnimationClips = animations;
+  currentAnimationIndex = animations.length ? getDefaultAnimationIndex(animations) : -1;
+  renderAnimationOptions();
   if (!animations.length) return;
+
   currentMixer = new THREE.AnimationMixer(root);
-  animations.forEach((clip) => currentMixer.clipAction(clip).play());
+  playAnimation(currentAnimationIndex);
+  currentMixer.setTime(0);
 }
 
 async function loadModel(url, label = url) {
@@ -338,6 +553,7 @@ async function loadModel(url, label = url) {
       loader.setResourcePath(url.slice(0, url.lastIndexOf('/') + 1));
       object = await loadWith(loader, url);
       startAnimations(object, object.animations);
+      normalizeFbxMaterials(object);
     } else if (extension === 'obj') {
       object = await loadObj(url);
     } else if (extension === 'dae') {
@@ -356,10 +572,10 @@ async function loadModel(url, label = url) {
     }
 
     prepareObject(object);
-    currentObject = createCenteredPivot(object);
+    currentObject = createGroundedPivot(object);
     scene.add(currentObject);
     frameObject(currentObject);
-    setStatus(`Loaded ${label}. Auto rotate spins the model around its center. Drag to rotate camera, scroll to zoom.`);
+    setStatus(`Loaded ${label}. Auto rotate spins the model around its foot origin. Drag to rotate camera, scroll to zoom.`);
   } catch (error) {
     console.error(error);
     setStatus(`Could not load ${label}: ${error.message}`, true);
@@ -721,11 +937,11 @@ async function handleFile(file) {
     activeUrl = '';
     const object = await parseLocalFile(file);
     prepareObject(object);
-    currentObject = createCenteredPivot(object);
+    currentObject = createGroundedPivot(object);
     scene.add(currentObject);
     frameObject(currentObject);
     renderModelList();
-    setStatus(`Loaded ${file.name}. Auto rotate spins the model around its center. For textures and linked files, use the model directory server list.`);
+    setStatus(`Loaded ${file.name}. Auto rotate spins the model around its foot origin. For textures and linked files, use the model directory server list.`);
   } catch (error) {
     console.error(error);
     setStatus(`Could not load ${file.name}: ${error.message}`, true);
@@ -768,6 +984,9 @@ resetButton.addEventListener('click', () => {
   resetCamera();
 });
 wireframeInput.addEventListener('change', () => setWireframe(wireframeInput.checked));
+animationInput.addEventListener('change', () => {
+  playAnimation(Number(animationInput.value));
+});
 lightInput.addEventListener('input', () => {
   const value = Number(lightInput.value);
   hemiLight.intensity = value;
